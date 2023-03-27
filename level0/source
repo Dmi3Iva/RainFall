@@ -1,7 +1,8 @@
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     if (atoi(argv[1] == 423))
         execv("/bin/sh", 0, 0);
-    else 
+    else
         fwrite("No !\n", 1, 5, stderr);
     return 0;
 }

@@ -1,0 +1,19 @@
+int m = 0;
+
+void v(void)
+{
+    char buf[512];
+
+    fgets(buf, 512, stdin);
+    printf(buffer);
+    if (m == 64)
+    {
+        fwrite(str, 12, 1, "Wait what?!\n");
+        system("/bin/sh");
+    }
+}
+
+int main(void)
+{
+    v();
+}
