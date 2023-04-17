@@ -34,7 +34,6 @@ int main(int ac, char **av)
     }
 
     nclass_1 = new N(5);
-
     nclass_2 = new N(6);
 
     nclass_1->setAnnotation(av[1]);
