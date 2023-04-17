@@ -1,30 +1,33 @@
 char c[200];
 
-void m(void) {
-  time_t t;
+void m(void)
+{
+    time_t t;
 
-  t = time(0);
-  printf("%s - %d\n", c, (int)t);
+    t = time(0);
+    printf("%s - %d\n", c, (int)t);
 }
 
-int main(int argc, char **argv) {
-  char *s1;
-  char *s2;
-  FILE *pass;
+int main(int argc, char **argv)
+{
+    char *a;
+    char *a2;
+    char *b;
+    char *b2;
 
-  s1 = malloc(8);
-  *s1 = 1;
+    a = malloc(8);
+    a[0] = 1;
+    a2 = malloc(8);
 
-  s2 = malloc(8);
-  *s2 = 1;
+    b = malloc(8);
+    b[0] = 2;
+    b2 = malloc(8);
 
-  strcpy(s1[1], argv[1]);
-  strcpy(s2[1], argv[2]);
+    strcpy((char *)a2, argv[1]);
+    strcpy((char *)b2, argv[2]);
 
-  pass = fopen("/home/user/level8/.pass","r");
-
-  fgets(c, 68, pass);
-  puts("~~");
-
-  return 0;
+    pass = fopen("/home/user/level8/.pass", "r");
+    fgets(c, 68, pass);
+    puts("~~");
+    return 0;
 }

