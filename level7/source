@@ -14,6 +14,7 @@ int main(int argc, char **argv)
     char *a2;
     char *b;
     char *b2;
+    FILE *pass;
 
     a = malloc(8);
     a[0] = 1;

